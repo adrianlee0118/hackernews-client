@@ -1,11 +1,4 @@
-.page {
-    margin: 20px;
-  }
-  
-  .interactions {
-    text-align: center;
-  }
-  
+
   .table {
     margin: 20px 0;
   }
@@ -57,7 +50,3 @@
     cursor: pointer;
   }
     
-  .button-active {
-    border-radius: 0;
-    border-bottom: 1px solid #38BB6C;
-  }
