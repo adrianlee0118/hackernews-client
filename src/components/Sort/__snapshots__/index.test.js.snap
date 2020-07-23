@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sort has a valid snapshot 1`] = `
+<button
+  className="button-inline button-active"
+  onClick={[Function]}
+  type="button"
+>
+  Title
+</button>
+`;
