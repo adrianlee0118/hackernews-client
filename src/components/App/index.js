@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Search from "../Search";
 import Table from "../Table";
@@ -14,6 +14,105 @@ import {
 } from "../../constants";
 import "./index.css";
 
+const App = () => {
+  const [results, setResults] = useState([]);
+  const [searchKey, setSearchKey] = useState("");
+  const [searchTerm, setSearchTerm] = useState(DEFAULT_QUERY);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchSearchTopStories = (searchTerm, page = 0) => {
+    setIsLoading(true);
+    axios(
+      `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`
+    )
+      .then((result) => setSearchTopStories(result.data))
+      .catch((error) => setError(error));
+  };
+
+  useEffect(() => {
+    fetchSearchTopStories(searchTerm);
+  }, [searchKey]);
+
+  const needsToSearchTopStories = (term) => {
+    return results[term];
+  };
+  const setSearchTopStories = (result) => {
+    const { hits, page } = result;
+    const updates = updateSearchTopStoriesState(hits, page, searchKey, results);
+    setResults(updates.results);
+    setIsLoading(updates.isLoading);
+  };
+
+  const onSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const onSearchSubmit = (event) => {
+    setSearchKey(searchTerm);
+    if (needsToSearchTopStories(searchTerm)) {
+      fetchSearchTopStories(searchTerm);
+    }
+    event.preventDefault();
+  };
+  const onDismiss = (id) => {
+    const { hits, page } = results[searchKey];
+    const updatedHits = hits.filter((item) => item.objectID !== id);
+    setResults({ ...results, [searchKey]: { hits: updatedHits, page } });
+  };
+
+  return (
+    <div className="page">
+      <div className="interactions">
+        <Search
+          value={searchTerm}
+          onChange={onSearchChange}
+          onSubmit={onSearchSubmit}
+        >
+          Search
+        </Search>
+      </div>
+      {error ? (
+        <div className="interactions">Something went wrong.</div>
+      ) : (
+        <Table
+          list={
+            (results && results[searchKey] && results[searchKey].hits) || []
+          }
+          onDismiss={onDismiss}
+        />
+      )}
+      <div className="interactions">
+        <ButtonWithLoading
+          isLoading={isLoading}
+          onClick={() =>
+            fetchSearchTopStories(
+              searchKey,
+              ((results && results[searchKey] && results[searchKey].page) ||
+                0) + 1
+            )
+          }
+        >
+          More
+        </ButtonWithLoading>
+      </div>
+    </div>
+  );
+};
+
+//HOC function used to update results using imperative value (prevState for class) of results
+const updateSearchTopStoriesState = (hits, page, searchKey, results) => {
+  const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
+  const updatedHits = [...oldHits, ...hits];
+  return {
+    results: {
+      ...results,
+      [searchKey]: { hits: updatedHits, page },
+    },
+    isLoading: false,
+  };
+};
+
+/*
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -109,21 +208,6 @@ class App extends React.Component {
     );
   }
 }
-
-//HOC function passed to setState() so that exact values of state at point of execution (prevState) are used to find the next state
-const updateSearchTopStoriesState = (hits, page) => (prevState) => {
-  const { searchKey, results } = prevState;
-  console.log("SearchKey: " + searchKey);
-  console.log("results: " + results);
-  const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
-  const updatedHits = [...oldHits, ...hits];
-  return {
-    results: {
-      ...results,
-      [searchKey]: { hits: updatedHits, page },
-    },
-    isLoading: false,
-  };
-};
+*/
 
 export default App;
