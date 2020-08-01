@@ -1,66 +1,66 @@
-import React, { useState } from "react";
-import { sortBy } from "lodash";
+import React, { useReducer } from "react";
 import Sort from "../Sort";
 import Button from "../Button";
 import PropTypes from "prop-types";
+import tableReducer from "../../reducers/Table";
+import {
+  SORT,
+  smallColumn,
+  midColumn,
+  largeColumn,
+  SORTS,
+} from "../../constants";
 import "./index.css";
 
-const smallColumn = {
-  width: "10%",
-};
-const midColumn = {
-  width: "30%",
-};
-const largeColumn = {
-  width: "40%",
-};
-
-const SORTS = {
-  NONE: (list) => list,
-  TITLE: (list) => sortBy(list, "title"),
-  AUTHOR: (list) => sortBy(list, "author"),
-  COMMENTS: (list) => sortBy(list, "num_comments").reverse(),
-  POINTS: (list) => sortBy(list, "points").reverse(),
-};
-
 const Table = ({ list, onDismiss }) => {
-  const [sortKey, setSortKey] = useState("NONE");
-  const [isSortReverse, setIsSortReverse] = useState(false);
-
-  const onSort = (key) => {
-    const reverse = sortKey === key && !isSortReverse;
-    setSortKey(key);
-    setIsSortReverse(reverse);
-  };
-
+  const [state, dispatch] = useReducer(tableReducer, {
+    sortKey: "NONE",
+    isSortReverse: false,
+  });
   return (
     <div className="table">
       <div className="table-header">
         <span style={largeColumn}>
-          <Sort sortKey={"TITLE"} onSort={onSort} activeSortKey={sortKey}>
+          <Sort
+            sortKey={"TITLE"}
+            onSort={(key) => dispatch({ type: SORT, key: key })}
+            activeSortKey={state.sortKey}
+          >
             Title
           </Sort>
         </span>
         <span style={midColumn}>
-          <Sort sortKey={"AUTHOR"} onSort={onSort} activeSortKey={sortKey}>
+          <Sort
+            sortKey={"AUTHOR"}
+            onSort={(key) => dispatch({ type: SORT, key: key })}
+            activeSortKey={state.sortKey}
+          >
             Author
           </Sort>
         </span>
         <span style={smallColumn}>
-          <Sort sortKey={"COMMENTS"} onSort={onSort} activeSortKey={sortKey}>
+          <Sort
+            sortKey={"COMMENTS"}
+            onSort={(key) => dispatch({ type: SORT, key: key })}
+            activeSortKey={state.sortKey}
+          >
             Comments
           </Sort>
         </span>
         <span style={smallColumn}>
-          <Sort sortKey={"POINTS"} onSort={onSort} activeSortKey={sortKey}>
+          <Sort
+            sortKey={"POINTS"}
+            onSort={(key) => dispatch({ type: SORT, key: key })}
+            activeSortKey={state.sortKey}
+          >
             Points
           </Sort>
         </span>
         <span style={smallColumn}>Archive</span>
       </div>
-      {(isSortReverse
-        ? SORTS[sortKey](list).reverse()
-        : SORTS[sortKey](list)
+      {(state.isSortReverse
+        ? SORTS[state.sortKey](list).reverse()
+        : SORTS[state.sortKey](list)
       ).map((item) => (
         <div key={item.objectID} className="table-row">
           <span style={largeColumn}>
