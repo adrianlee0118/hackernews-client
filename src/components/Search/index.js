@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import "./index.css";
 
 const Search = ({ value, onChange, onSubmit, children }) => {
   let input;
+  useEffect(() => {
+    if (input) input.focus();
+  }, []);
   return (
     <form onSubmit={onSubmit}>
       <input
