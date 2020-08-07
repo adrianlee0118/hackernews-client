@@ -29,6 +29,7 @@ const App = () => {
     error: null,
     isLoading: false,
   });
+
   const fetchSearchTopStories = (searchTerm, page = 0) => {
     dispatch({ type: START_FETCH });
     axios(
@@ -54,7 +55,7 @@ const App = () => {
       state.searchKey,
       state.results
     );
-    dispatch({ type: FETCH_SUCCESSFUL, results: updates.results });
+    dispatch({ type: FETCH_SUCCESSFUL, results: updates });
   };
 
   const onSearchChange = (event) => {
@@ -124,11 +125,8 @@ const updateSearchTopStoriesState = (hits, page, searchKey, results) => {
   const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
   const updatedHits = [...oldHits, ...hits];
   return {
-    results: {
-      ...results,
-      [searchKey]: { hits: updatedHits, page },
-    },
-    isLoading: false,
+    ...results,
+    [searchKey]: { hits: updatedHits, page },
   };
 };
 
