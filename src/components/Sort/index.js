@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../Button";
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import "./index.css";
+import "./index.scss";
 
 const Sort = ({ sortKey, onSort, activeSortKey, children }) => {
   const sortClass = classNames("button-inline", {

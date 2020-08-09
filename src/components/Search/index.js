@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import "./index.css";
+import "./index.scss";
 
 const Search = ({ value, onChange, onSubmit, children }) => {
   let input;

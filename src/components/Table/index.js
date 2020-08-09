@@ -10,7 +10,7 @@ import {
   largeColumn,
   SORTS,
 } from "../../constants";
-import "./index.css";
+import "./index.scss";
 
 const Table = ({ list, onDismiss }) => {
   const [state, dispatch] = useReducer(tableReducer, {

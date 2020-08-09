@@ -19,7 +19,7 @@ import {
   FETCH_FAILED,
   DISMISS,
 } from "../../constants";
-import "./index.css";
+import "./index.scss";
 
 const App = () => {
   const [state, dispatch] = useReducer(hackerNewsAPIReducer, {
