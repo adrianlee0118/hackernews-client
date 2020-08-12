@@ -6,7 +6,7 @@ const Search = ({ value, onChange, onSubmit, children }) => {
   let input;
   useEffect(() => {
     if (input) input.focus();
-  }, []);
+  }, [input]);
   return (
     <form onSubmit={onSubmit}>
       <input

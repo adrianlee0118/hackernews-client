@@ -24,7 +24,7 @@ import "./index.scss";
 const App = () => {
   const [state, dispatch] = useReducer(hackerNewsAPIReducer, {
     results: [],
-    searchKey: "",
+    searchKey: DEFAULT_QUERY,
     searchTerm: DEFAULT_QUERY,
     error: null,
     isLoading: false,
@@ -43,8 +43,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (needsToSearchTopStories(state.searchTerm)) {
-      fetchSearchTopStories(state.searchTerm);
+    if (needsToSearchTopStories(state.searchKey)) {
+      fetchSearchTopStories(state.searchKey);
     }
   }, [state.searchKey]);
 
@@ -69,8 +69,8 @@ const App = () => {
 
   const onSearchSubmit = (event) => {
     dispatch({ type: SEARCH_SUBMIT, term: state.searchTerm });
-    if (needsToSearchTopStories(state.searchTerm)) {
-      fetchSearchTopStories(state.searchTerm);
+    if (needsToSearchTopStories(state.searchKey)) {
+      fetchSearchTopStories(state.searchKey);
     }
     event.preventDefault();
   };
