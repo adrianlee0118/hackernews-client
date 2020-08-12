@@ -30,6 +30,7 @@ const App = () => {
     isLoading: false,
   });
 
+  /*
   const fetchSearchTopStories = (searchTerm, page = 0) => {
     dispatch({ type: START_FETCH });
     axios(
@@ -38,13 +39,28 @@ const App = () => {
       .then((result) => setSearchTopStories(result.data))
       .catch((error) => dispatch({ type: FETCH_FAILED, error: error }));
   };
+*/
+
+  const fetchSearchTopStories = async (searchTerm, page = 0) => {
+    dispatch({ type: START_FETCH });
+    try {
+      const result = await axios(
+        `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`
+      );
+      setSearchTopStories(result.data);
+    } catch (error) {
+      dispatch({ type: FETCH_FAILED, error: error });
+    }
+  };
 
   useEffect(() => {
-    fetchSearchTopStories(state.searchTerm);
+    if (needsToSearchTopStories(state.searchTerm)) {
+      fetchSearchTopStories(state.searchTerm);
+    }
   }, [state.searchKey]);
 
   const needsToSearchTopStories = (term) => {
-    return state.results[term];
+    return state.results[term] ? false : true;
   };
 
   const setSearchTopStories = (result) => {
