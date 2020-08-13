@@ -32,6 +32,7 @@ const App = () => {
 
   const fetchSearchTopStories = async (searchTerm, page = 0) => {
     dispatch({ type: START_FETCH });
+    /*
     try {
       const result = await axios(
         `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`
@@ -40,6 +41,12 @@ const App = () => {
     } catch (error) {
       dispatch({ type: FETCH_FAILED, error: error });
     }
+    */
+    await axios(
+      `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`
+    )
+      .then((result) => setSearchTopStories(result.data))
+      .catch((error) => dispatch({ type: FETCH_FAILED, error: error }));
   };
 
   useEffect(() => {
